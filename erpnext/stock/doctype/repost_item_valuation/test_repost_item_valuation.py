@@ -226,9 +226,16 @@ class TestRepostItemValuation(IntegrationTestCase, StockTestMixin):
 		from erpnext.accounts import utils
 
 		# lower numbers to simplify test
-		orig_chunk_size = utils.GL_REPOSTING_CHUNK
-		utils.GL_REPOSTING_CHUNK = 1
-		self.addCleanup(setattr, utils, "GL_REPOSTING_CHUNK", orig_chunk_size)
+		orig_chunk_size = frappe.db.get_single_value(
+		"Stock Reposting Settings", "gl_reposting_chunk_size"
+		)
+		frappe.db.set_single_value("Stock Reposting Settings", "gl_reposting_chunk_size", 1)
+		self.addCleanup(
+		frappe.db.set_single_value,
+		"Stock Reposting Settings",
+		"gl_reposting_chunk_size",
+		orig_chunk_size or "",
+		)
 
 		doc = frappe.new_doc("Repost Item Valuation")
 		doc.db_set = MagicMock()
@@ -254,9 +261,16 @@ class TestRepostItemValuation(IntegrationTestCase, StockTestMixin):
 		from erpnext.accounts import utils
 
 		# lower numbers to simplify test
-		orig_chunk_size = utils.GL_REPOSTING_CHUNK
-		utils.GL_REPOSTING_CHUNK = 2
-		self.addCleanup(setattr, utils, "GL_REPOSTING_CHUNK", orig_chunk_size)
+		orig_chunk_size = frappe.db.get_single_value(
+		"Stock Reposting Settings", "gl_reposting_chunk_size"
+		)
+		frappe.db.set_single_value("Stock Reposting Settings", "gl_reposting_chunk_size", 2)
+		self.addCleanup(
+		frappe.db.set_single_value,
+		"Stock Reposting Settings",
+		"gl_reposting_chunk_size",
+		orig_chunk_size or "",
+		)
 
 		item = self.make_item().name
 
@@ -300,9 +314,16 @@ class TestRepostItemValuation(IntegrationTestCase, StockTestMixin):
 		from erpnext.accounts import utils
 
 		# lower numbers to simplify test
-		orig_chunk_size = utils.GL_REPOSTING_CHUNK
-		utils.GL_REPOSTING_CHUNK = 2
-		self.addCleanup(setattr, utils, "GL_REPOSTING_CHUNK", orig_chunk_size)
+		orig_chunk_size = frappe.db.get_single_value(
+		"Stock Reposting Settings", "gl_reposting_chunk_size"
+		)
+		frappe.db.set_single_value("Stock Reposting Settings", "gl_reposting_chunk_size", 2)
+		self.addCleanup(
+		frappe.db.set_single_value,
+		"Stock Reposting Settings",
+		"gl_reposting_chunk_size",
+		orig_chunk_size or "",
+		)
 
 		rate = 100
 		item = self.make_item()

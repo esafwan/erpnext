@@ -14,9 +14,10 @@
   "limits_dont_apply_on",
   "item_based_reposting",
   "do_reposting_for_each_stock_transaction",
+  "gl_reposting_chunk_size",
   "errors_notification_section",
   "notify_reposting_error_to_role"
- ],
+],
  "fields": [
   {
    "fieldname": "scheduling_section",
@@ -72,6 +73,11 @@
    "fieldname": "do_reposting_for_each_stock_transaction",
    "fieldtype": "Check",
    "label": "Do reposting for each Stock Transaction"
+  },
+  {
+   "fieldname": "gl_reposting_chunk_size",
+   "fieldtype": "Int",
+   "label": "GL Reposting Chunk Size"
   }
  ],
  "index_web_pages_for_search": 1,

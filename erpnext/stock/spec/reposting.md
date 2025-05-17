@@ -29,6 +29,11 @@ changes to "Completed"
 - There are two more status: "Failed" when reposting failed and "Skipped" when reposting is deemed not necessary so it's skipped.
 - technical detail: Entry point for whole process is "repost_entries" function in repost_item_valuation.py
 
+## Configuration
+Stock Reposting Settings includes a *GL Reposting Chunk Size* value that controls
+how many stock vouchers are processed together when reposting GL Entries. Leave
+this blank to use the default size of 100.
+
 
 ## How to identify broken stock data:
 There are 4 major reports for checking broken stock data:

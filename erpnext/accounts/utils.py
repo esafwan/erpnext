@@ -45,10 +45,18 @@ class FiscalYearError(frappe.ValidationError):
 
 
 class PaymentEntryUnlinkError(frappe.ValidationError):
-	pass
+       pass
 
 
-GL_REPOSTING_CHUNK = 100
+GL_REPOSTING_CHUNK_DEFAULT = 100
+
+
+def get_gl_reposting_chunk_size() -> int:
+       """Return GL reposting chunk size from settings or default."""
+       return cint(
+               frappe.db.get_single_value("Stock Reposting Settings", "gl_reposting_chunk_size")
+               or GL_REPOSTING_CHUNK_DEFAULT
+       )
 
 
 @frappe.whitelist()
@@ -1462,7 +1470,8 @@ def repost_gle_for_stock_vouchers(
 
 	precision = get_field_precision(frappe.get_meta("GL Entry").get_field("debit")) or 2
 
-	for stock_vouchers_chunk in create_batch(stock_vouchers, GL_REPOSTING_CHUNK):
+       chunk_size = get_gl_reposting_chunk_size()
+       for stock_vouchers_chunk in create_batch(stock_vouchers, chunk_size):
 		gle = get_voucherwise_gl_entries(stock_vouchers_chunk, posting_date)
 
 		for voucher_type, voucher_no in stock_vouchers_chunk:
