@@ -263,7 +263,8 @@ class RepostItemValuation(Document):
 
 
 def on_doctype_update():
-	frappe.db.add_index("Repost Item Valuation", ["warehouse", "item_code"], "item_warehouse")
+       frappe.db.add_index("Repost Item Valuation", ["warehouse", "item_code"], "item_warehouse")
+       frappe.db.add_index("Repost Item Valuation", ["status", "creation"], "status_creation")
 
 
 def repost(doc):

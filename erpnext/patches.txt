@@ -413,3 +413,4 @@ erpnext.patches.v14_0.set_update_price_list_based_on
 erpnext.patches.v15_0.update_journal_entry_type
 erpnext.patches.v15_0.set_grand_total_to_default_mop
 execute:frappe.db.set_single_value("Accounts Settings", "use_new_budget_controller", True)
+erpnext.stock.doctype.repost_item_valuation.patches.ensure_riv_indexes

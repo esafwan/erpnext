@@ -442,8 +442,8 @@ class TestRepostItemValuation(IntegrationTestCase, StockTestMixin):
 		self.assertRaises(frappe.ValidationError, riv.save)
 		doc.cancel()
 
-	def test_remove_attached_file(self):
-		item_code = make_item("_Test Remove Attached File Item", properties={"is_stock_item": 1})
+        def test_remove_attached_file(self):
+                item_code = make_item("_Test Remove Attached File Item", properties={"is_stock_item": 1})
 
 		make_purchase_receipt(
 			item_code=item_code,
@@ -464,8 +464,44 @@ class TestRepostItemValuation(IntegrationTestCase, StockTestMixin):
 					"File",
 					{"attached_to_doctype": "Repost Item Valuation", "attached_to_name": docname},
 					"name",
-				)
-			)
+                                        )
+                                )
+
+       def test_get_repost_item_valuation_entries_order(self):
+               frappe.db.delete("Repost Item Valuation")
+
+               args = {
+                       "doctype": "Repost Item Valuation",
+                       "item_code": "_Test Item",
+                       "warehouse": "_Test Warehouse - _TC",
+                       "based_on": "Item and Warehouse",
+                       "posting_time": "00:00:00",
+               }
+
+               riv1 = frappe.get_doc({**args, "posting_date": "2023-01-01"})
+               riv1.flags.dont_run_in_test = True
+               riv1.submit()
+               riv1.load_from_db()
+               riv1.creation = add_days(now(), days=-3)
+               riv1.db_update_all()
+
+               riv2 = frappe.get_doc({**args, "posting_date": "2023-01-02"})
+               riv2.flags.dont_run_in_test = True
+               riv2.submit()
+               riv2.load_from_db()
+               riv2.creation = add_days(now(), days=-2)
+               riv2.db_update_all()
+
+               riv3 = frappe.get_doc({**args, "posting_date": "2023-01-01"})
+               riv3.status = "In Progress"
+               riv3.flags.dont_run_in_test = True
+               riv3.submit()
+               riv3.load_from_db()
+               riv3.creation = add_days(now(), days=-1)
+               riv3.db_update_all()
+
+               names = [row.name for row in get_repost_item_valuation_entries()]
+               self.assertEqual(names, [riv1.name, riv3.name, riv2.name])
 		else:
 			repost_entries = create_item_wise_repost_entries(pr1.doctype, pr1.name)
 			for entry in repost_entries:
